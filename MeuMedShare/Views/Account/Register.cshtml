@@ -1,0 +1,34 @@
+@model MeuMedShare.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Registro";
+}
+<h2>Registrar</h2>
+<form asp-action="Register" method="post">
+    <div>
+        <label>Tipo de Perfil</label>
+        <select asp-for="PerfilTipo">
+            <option value="Doador">Doador</option>
+            <option value="Instituicao">Instituição</option>
+        </select>
+    </div>
+    <div>
+        <label asp-for="Email"></label>
+        <input asp-for="Email" />
+        <span asp-validation-for="Email"></span>
+    </div>
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+    <div>
+        <label asp-for="ConfirmPassword"></label>
+        <input asp-for="ConfirmPassword" />
+        <span asp-validation-for="ConfirmPassword"></span>
+    </div>
+    <button type="submit">Registrar</button>
+</form>
+<a asp-action="Login">Já possui conta? Entrar</a>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
