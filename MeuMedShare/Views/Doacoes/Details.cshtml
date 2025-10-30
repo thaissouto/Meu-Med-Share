@@ -1,44 +1,324 @@
 @model MeuMedShare.Models.Domain.Doacao
 @{
-    ViewData["Title"] = "Detalhes da Doa��o";
+    ViewData["Title"] = "Detalhes da Doação - MeuMedShare";
 }
-<h2 class="mb-4">Detalhes da Doa��o</h2>
-<div class="row g-4">
-    <div class="col-md-6">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Medicamento</h5>
-                <p class="mb-1"><strong>Nome:</strong> @Model.Medicamento?.Nome</p>
-                <p class="mb-1"><strong>Descri��o:</strong> @Model.Medicamento?.Descricao</p>
-                <p class="mb-1"><strong>Validade:</strong> @Model.Medicamento?.DataValidade.ToString("dd/MM/yyyy")</p>
-                <p class="mb-1"><strong>Quantidade:</strong> @Model.Quantidade</p>
-                @if(!string.IsNullOrEmpty(Model.Medicamento?.FotoPath)){
-                    <div class="mt-2"><img src="/@Model.Medicamento.FotoPath" class="img-fluid rounded" style="max-width:220px" /></div>
-                }
-                @if(!string.IsNullOrEmpty(Model.Medicamento?.ReceitaPath)){
-                    <p class="mt-2"><a href="/@Model.Medicamento.ReceitaPath" target="_blank" class="btn btn-outline-secondary btn-sm">Ver Receita</a></p>
-                }
+
+<div class="page-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1><i class="fas fa-info-circle me-3"></i>Detalhes da Doação</h1>
+                <p class="mb-0">Informações completas sobre a doação de medicamentos</p>
             </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Destino</h5>
-                <p class="mb-1"><strong>Institui��o:</strong><br /> @Model.Instituicao?.RazaoSocial</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Doador</h5>
-                <p class="mb-1">@Model.Doador?.Nome</p>
+            <div class="col-md-4 text-md-end">
+                <div class="d-flex gap-2 justify-content-md-end">
+                    <button class="btn btn-light" onclick="window.print()">
+                        <i class="fas fa-print me-2"></i>Imprimir
+                    </button>
+                    <button class="btn btn-light" onclick="shareDoacao()">
+                        <i class="fas fa-share-alt me-2"></i>Compartilhar
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<div class="mt-4">
-    <a asp-action="Create" class="btn btn-primary">Nova Doa��o</a>
-    <a asp-action="Index" class="btn btn-outline-secondary ms-2">Voltar</a>
+
+<div class="container">
+    <!-- Status da Doação -->
+    <div class="card shadow-custom mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center">
+                        <div class="status-indicator bg-success me-3"></div>
+                        <div>
+                            <h5 class="mb-1 fw-bold">Doação Realizada com Sucesso</h5>
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-clock me-2"></i>
+                                Registrada em @Model.DataDoacao.ToString("dd/MM/yyyy 'às' HH:mm")
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <div class="badge bg-success fs-6 px-3 py-2">
+                        <i class="fas fa-check-circle me-2"></i>Concluída
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Informações do Medicamento -->
+        <div class="col-lg-8">
+            <div class="card shadow-custom h-100">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-pills me-3 text-primary fs-5"></i>
+                        <h5 class="mb-0 fw-bold">Informações do Medicamento</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="fw-semibold text-muted small">NOME DO MEDICAMENTO</label>
+                                <h6 class="mb-3">@Model.Medicamento?.Nome</h6>
+                            </div>
+                            
+                            <div class="info-item">
+                                <label class="fw-semibold text-muted small">QUANTIDADE</label>
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="badge bg-primary fs-6 px-3 py-2">
+                                        @Model.Quantidade unidades
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <label class="fw-semibold text-muted small">DATA DE VALIDADE</label>
+                                <div class="d-flex align-items-center mb-3">
+                                    @{
+                                        var diasParaVencer = (Model.Medicamento?.DataValidade - DateTime.Now)?.Days ?? 0;
+                                        var corValidade = diasParaVencer < 90 ? "text-warning" : "text-success";
+                                    }
+                                    <span class="@corValidade">
+                                        <i class="fas fa-calendar-alt me-2"></i>
+                                        @Model.Medicamento?.DataValidade.ToString("dd/MM/yyyy")
+                                    </span>
+                                    @if (diasParaVencer < 90)
+                                    {
+                                        <span class="badge bg-warning ms-2">
+                                            @diasParaVencer dias restantes
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            @if (!string.IsNullOrEmpty(Model.Medicamento?.Descricao))
+                            {
+                                <div class="info-item">
+                                    <label class="fw-semibold text-muted small">DESCRIÇÃO</label>
+                                    <p class="mb-3">@Model.Medicamento.Descricao</p>
+                                </div>
+                            }
+                            
+                            @if (!string.IsNullOrEmpty(Model.Medicamento?.FotoPath))
+                            {
+                                <div class="info-item">
+                                    <label class="fw-semibold text-muted small">FOTO DO MEDICAMENTO</label>
+                                    <div class="mb-3">
+                                        <img src="/@Model.Medicamento.FotoPath" 
+                                             class="img-fluid rounded shadow-sm" 
+                                             style="max-width: 250px; cursor: pointer;" 
+                                             onclick="openImageModal(this.src)"
+                                             alt="Foto do medicamento" />
+                                    </div>
+                                </div>
+                            }
+                            
+                            @if (!string.IsNullOrEmpty(Model.Medicamento?.ReceitaPath))
+                            {
+                                <div class="info-item">
+                                    <label class="fw-semibold text-muted small">RECEITA MÉDICA</label>
+                                    <div class="mb-3">
+                                        <a href="/@Model.Medicamento.ReceitaPath" 
+                                           target="_blank" 
+                                           class="btn btn-outline-secondary">
+                                            <i class="fas fa-file-prescription me-2"></i>
+                                            Ver Receita
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar com informações adicionais -->
+        <div class="col-lg-4">
+            <!-- Informações do Destinatário -->
+            <div class="card shadow-custom mb-4">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-hospital me-3 text-success fs-5"></i>
+                        <h6 class="mb-0 fw-bold">Destinatário</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-success bg-opacity-10 rounded-circle p-3 me-3">
+                            <i class="fas fa-building text-success"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-1">@Model.Instituicao?.RazaoSocial</h6>
+                            <small class="text-muted">Instituição Beneficiária</small>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <i class="fas fa-id-card me-2 text-muted"></i>
+                        <span class="small">CNPJ: @Model.Instituicao?.CNPJ</span>
+                    </div>
+                    
+                    @if (Model.Instituicao?.Endereco != null)
+                    {
+                        <div class="mb-2">
+                            <i class="fas fa-map-marker-alt me-2 text-muted"></i>
+                            <span class="small">
+                                @Model.Instituicao.Endereco.Cidade, @Model.Instituicao.Endereco.UF
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+            
+            <!-- Informações do Doador -->
+            <div class="card shadow-custom mb-4">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-user-heart me-3 text-info fs-5"></i>
+                        <h6 class="mb-0 fw-bold">Doador</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-info bg-opacity-10 rounded-circle p-3 me-3">
+                            <i class="fas fa-user text-info"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-1">@(Model.Doador?.Nome ?? "Doador Anônimo")</h6>
+                            <small class="text-muted">Pessoa Física</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Impacto da Doação -->
+            <div class="card shadow-custom">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-chart-line me-3 text-warning fs-5"></i>
+                        <h6 class="mb-0 fw-bold">Impacto</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-heart fs-2 text-danger mb-2"></i>
+                            <h4 class="fw-bold text-success">Parabéns!</h4>
+                            <p class="small text-muted mb-0">
+                                Sua doação pode ajudar até <strong>@Model.Quantidade pessoas</strong> 
+                                que precisam deste medicamento.
+                            </p>
+                        </div>
+                        <div class="progress mb-3" style="height: 10px;">
+                            <div class="progress-bar bg-success" style="width: 100%"></div>
+                        </div>
+                        <small class="text-muted">Doação 100% completa</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Ações -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-custom">
+                <div class="card-body">
+                    <div class="d-flex flex-column flex-md-row gap-3 align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-lightbulb fs-4 text-warning me-3"></i>
+                            <div>
+                                <h6 class="mb-1">Gostou da experiência?</h6>
+                                <small class="text-muted">Continue ajudando outras pessoas com suas doações</small>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Voltar à Lista
+                            </a>
+                            <a asp-action="Create" class="btn btn-success">
+                                <i class="fas fa-plus me-2"></i>Nova Doação
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Modal para visualizar imagem -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Foto do Medicamento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImage" class="img-fluid rounded" alt="Foto do medicamento" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .status-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .info-item {
+            border-left: 3px solid var(--primary-color);
+            padding-left: 15px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-item label {
+            display: block;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        
+        @@media print {
+            .page-header, .btn, .card-footer {
+                display: none !important;
+            }
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        function openImageModal(src) {
+            document.getElementById('modalImage').src = src;
+            new bootstrap.Modal(document.getElementById('imageModal')).show();
+        }
+        
+        function shareDoacao() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'MeuMedShare - Doação de Medicamentos',
+                    text: 'Confira esta doação de medicamentos no MeuMedShare: @Model.Medicamento?.Nome',
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('Link da doação copiado para a área de transferência!');
+                });
+            }
+        }
+    </script>
+}

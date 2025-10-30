@@ -1,8 +1,142 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Início";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Hero Section -->
+<div class="page-header text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Bem-vindo ao MeuMedShare</h1>
+        <p class="lead">Conectando doadores e instituições para um mundo mais saudável</p>
+        <div class="mt-4">
+            @if (!User.Identity?.IsAuthenticated == true)
+            {
+                <a asp-controller="Account" asp-action="Register" class="btn btn-light btn-lg me-3">
+                    <i class="fas fa-user-plus me-2"></i>Cadastre-se
+                </a>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-sign-in-alt me-2"></i>Entrar
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Doacoes" asp-action="Create" class="btn btn-light btn-lg me-3">
+                    <i class="fas fa-heart me-2"></i>Fazer Doação
+                </a>
+                <a asp-controller="Doacoes" asp-action="Index" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-list me-2"></i>Ver Doações
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="container my-5">
+    <div class="row text-center mb-5">
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 shadow-custom">
+                <div class="card-body p-4">
+                    <div class="text-primary mb-3">
+                        <i class="fas fa-heart fa-3x"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Faça Doações</h5>
+                    <p class="card-text text-muted">
+                        Doe medicamentos que não precisa mais e ajude quem realmente precisa. 
+                        Sua generosidade pode salvar vidas.
+                    </p>
+                    <a asp-controller="Doacoes" asp-action="Create" class="btn btn-primary">
+                        Quero Doar
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 shadow-custom">
+                <div class="card-body p-4">
+                    <div class="text-success mb-3">
+                        <i class="fas fa-hands-helping fa-3x"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Receba Doações</h5>
+                    <p class="card-text text-muted">
+                        Instituições de saúde podem receber medicamentos doados de forma 
+                        segura e transparente.
+                    </p>
+                    <a asp-controller="Perfis" asp-action="Create" class="btn btn-success">
+                        Sou Instituição
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 shadow-custom">
+                <div class="card-body p-4">
+                    <div class="text-warning mb-3">
+                        <i class="fas fa-shield-alt fa-3x"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Segurança</h5>
+                    <p class="card-text text-muted">
+                        Todas as doações são verificadas e acompanhadas para garantir 
+                        segurança e qualidade.
+                    </p>
+                    <a href="#" class="btn btn-warning">
+                        Saiba Mais
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="row bg-light rounded-custom p-4 mb-5">
+        <div class="col-md-3 text-center mb-3">
+            <h3 class="text-primary fw-bold">150+</h3>
+            <p class="text-muted">Doações Realizadas</p>
+        </div>
+        <div class="col-md-3 text-center mb-3">
+            <h3 class="text-success fw-bold">50+</h3>
+            <p class="text-muted">Instituições Cadastradas</p>
+        </div>
+        <div class="col-md-3 text-center mb-3">
+            <h3 class="text-warning fw-bold">300+</h3>
+            <p class="text-muted">Doadores Ativos</p>
+        </div>
+        <div class="col-md-3 text-center mb-3">
+            <h3 class="text-danger fw-bold">1000+</h3>
+            <p class="text-muted">Vidas Impactadas</p>
+        </div>
+    </div>
+
+    <!-- How it works -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold mb-4">Como Funciona</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="mb-3">
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <span class="fw-bold fs-4">1</span>
+                    </div>
+                </div>
+                <h5 class="fw-bold">Cadastre-se</h5>
+                <p class="text-muted">Crie sua conta como doador ou instituição</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="mb-3">
+                    <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <span class="fw-bold fs-4">2</span>
+                    </div>
+                </div>
+                <h5 class="fw-bold">Publique ou Encontre</h5>
+                <p class="text-muted">Publique doações ou encontre o que precisa</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="mb-3">
+                    <div class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <span class="fw-bold fs-4">3</span>
+                    </div>
+                </div>
+                <h5 class="fw-bold">Conecte-se</h5>
+                <p class="text-muted">Entre em contato e realize a doação</p>
+            </div>
+        </div>
+    </div>
 </div>

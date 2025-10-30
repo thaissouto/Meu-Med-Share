@@ -1,31 +1,290 @@
 @model IEnumerable<MeuMedShare.Models.Domain.Doacao>
 @{
-    ViewData["Title"] = "Minhas Doa��es";
+    ViewData["Title"] = "Minhas Doações - MeuMedShare";
 }
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="mb-0">Minhas Doa��es</h2>
-    <a asp-action="Create" class="btn btn-primary">Nova Doa��o</a>
+
+<div class="page-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1><i class="fas fa-heart me-3"></i>Minhas Doações</h1>
+                <p class="mb-0">Acompanhe suas contribuições para um mundo mais saudável</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a asp-action="Create" class="btn btn-light btn-lg">
+                    <i class="fas fa-plus me-2"></i>Nova Doação
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
-<table class="table table-hover align-middle">
-    <thead class="table-light">
-    <tr>
-        <th>Data</th>
-        <th>Medicamento</th>
-        <th>Qtd</th>
-        <th>Institui��o</th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var d in Model)
+
+<div class="container">
+    <!-- Filtros e Busca -->
+    <div class="card shadow-custom mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">
+                        <i class="fas fa-search me-2"></i>Buscar medicamento
+                    </label>
+                    <input type="text" class="form-control" id="searchInput" placeholder="Digite o nome do medicamento...">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">
+                        <i class="fas fa-calendar me-2"></i>Período
+                    </label>
+                    <select class="form-select" id="periodFilter">
+                        <option value="">Todos os períodos</option>
+                        <option value="7">Últimos 7 dias</option>
+                        <option value="30">Últimos 30 dias</option>
+                        <option value="90">Últimos 3 meses</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">
+                        <i class="fas fa-hospital me-2"></i>Instituição
+                    </label>
+                    <select class="form-select" id="institutionFilter">
+                        <option value="">Todas as instituições</option>
+                        @if (Model != null)
+                        {
+                            @foreach (var instituicao in Model.Select(d => d.Instituicao).Where(i => i != null).Distinct())
+                            {
+                                <option value="@instituicao?.RazaoSocial">@instituicao?.RazaoSocial</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                        <i class="fas fa-times me-2"></i>Limpar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estatísticas -->
+    @if (Model != null && Model.Any())
     {
-        <tr>
-            <td>@d.DataDoacao.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
-            <td>@d.Medicamento?.Nome</td>
-            <td><span class="badge bg-secondary">@d.Quantidade</span></td>
-            <td>@d.Instituicao?.RazaoSocial</td>
-            <td><a asp-action="Details" asp-route-id="@d.Id" class="btn btn-sm btn-outline-primary">Detalhes</a></td>
-        </tr>
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="card text-center shadow-custom">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-center mb-2">
+                            <i class="fas fa-heart fs-2 text-danger me-3"></i>
+                            <div>
+                                <h3 class="mb-0 fw-bold">@Model.Count()</h3>
+                                <small class="text-muted">Doações</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center shadow-custom">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-center mb-2">
+                            <i class="fas fa-pills fs-2 text-primary me-3"></i>
+                            <div>
+                                <h3 class="mb-0 fw-bold">@Model.Sum(d => d.Quantidade)</h3>
+                                <small class="text-muted">Medicamentos</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center shadow-custom">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-center mb-2">
+                            <i class="fas fa-hospital fs-2 text-success me-3"></i>
+                            <div>
+                                <h3 class="mb-0 fw-bold">@Model.Select(d => d.InstituicaoId).Distinct().Count()</h3>
+                                <small class="text-muted">Instituições</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center shadow-custom">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-center mb-2">
+                            <i class="fas fa-calendar-check fs-2 text-warning me-3"></i>
+                            <div>
+                                <h3 class="mb-0 fw-bold">@((DateTime.Now - Model.Min(d => d.DataDoacao)).Days)</h3>
+                                <small class="text-muted">Dias ativo</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
-    </tbody>
-</table>
+
+    <!-- Lista de Doações -->
+    <div class="row" id="doacoesList">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var doacao in Model.OrderByDescending(d => d.DataDoacao))
+            {
+                <div class="col-lg-6 col-xl-4 mb-4 doacao-card" 
+                     data-medicamento="@doacao.Medicamento?.Nome?.ToLower()" 
+                     data-instituicao="@doacao.Instituicao?.RazaoSocial" 
+                     data-date="@doacao.DataDoacao.ToString("yyyy-MM-dd")">
+                    <div class="card h-100 shadow-custom">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-prescription-bottle me-2 text-primary"></i>
+                                <span class="fw-bold">@doacao.Medicamento?.Nome</span>
+                            </div>
+                            <span class="badge bg-primary">@doacao.Quantidade un.</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>
+                                    @doacao.DataDoacao.ToLocalTime().ToString("dd/MM/yyyy 'às' HH:mm")
+                                </small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-hospital me-2 text-success"></i>
+                                    <strong>Destinatário:</strong>
+                                </div>
+                                <span class="text-muted">@doacao.Instituicao?.RazaoSocial</span>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(doacao.Medicamento?.Descricao))
+                            {
+                                <div class="mb-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-info-circle me-2 text-info"></i>
+                                        <strong>Descrição:</strong>
+                                    </div>
+                                    <p class="text-muted small mb-0">
+                                        @(doacao.Medicamento.Descricao.Length > 100 
+                                            ? doacao.Medicamento.Descricao.Substring(0, 100) + "..." 
+                                            : doacao.Medicamento.Descricao)
+                                    </p>
+                                </div>
+                            }
+
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-calendar-alt me-2 text-warning"></i>
+                                    <strong>Validade:</strong>
+                                </div>
+                                <span class="@(doacao.Medicamento?.DataValidade < DateTime.Now.AddDays(90) ? "text-warning" : "text-muted")">
+                                    @doacao.Medicamento?.DataValidade.ToString("dd/MM/yyyy")
+                                    @if (doacao.Medicamento?.DataValidade < DateTime.Now.AddDays(90))
+                                    {
+                                        <i class="fas fa-exclamation-triangle ms-1" title="Vencimento próximo"></i>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+                                <a asp-action="Details" asp-route-id="@doacao.Id" 
+                                   class="btn btn-outline-primary btn-sm flex-fill">
+                                    <i class="fas fa-eye me-1"></i>Detalhes
+                                </a>
+                                <button type="button" class="btn btn-outline-success btn-sm flex-fill" 
+                                        onclick="shareDoacao(@doacao.Id)">
+                                    <i class="fas fa-share-alt me-1"></i>Compartilhar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="card shadow-custom">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-heart fs-1 text-muted mb-3"></i>
+                        <h4 class="text-muted mb-3">Nenhuma doação encontrada</h4>
+                        <p class="text-muted mb-4">Que tal fazer sua primeira doação e ajudar quem precisa?</p>
+                        <a asp-action="Create" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus me-2"></i>Fazer Primeira Doação
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Função de busca e filtro
+        function filterDoacoes() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const periodFilter = document.getElementById('periodFilter').value;
+            const institutionFilter = document.getElementById('institutionFilter').value;
+            const cards = document.querySelectorAll('.doacao-card');
+            
+            cards.forEach(card => {
+                let show = true;
+                
+                // Filtro de busca
+                if (searchTerm && !card.dataset.medicamento.includes(searchTerm)) {
+                    show = false;
+                }
+                
+                // Filtro de instituição
+                if (institutionFilter && card.dataset.instituicao !== institutionFilter) {
+                    show = false;
+                }
+                
+                // Filtro de período
+                if (periodFilter) {
+                    const cardDate = new Date(card.dataset.date);
+                    const cutoffDate = new Date();
+                    cutoffDate.setDate(cutoffDate.getDate() - parseInt(periodFilter));
+                    if (cardDate < cutoffDate) {
+                        show = false;
+                    }
+                }
+                
+                card.style.display = show ? 'block' : 'none';
+            });
+        }
+        
+        // Event listeners para filtros
+        document.getElementById('searchInput').addEventListener('input', filterDoacoes);
+        document.getElementById('periodFilter').addEventListener('change', filterDoacoes);
+        document.getElementById('institutionFilter').addEventListener('change', filterDoacoes);
+        
+        // Limpar filtros
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('periodFilter').value = '';
+            document.getElementById('institutionFilter').value = '';
+            filterDoacoes();
+        }
+        
+        // Função para compartilhar doação
+        function shareDoacao(id) {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'MeuMedShare - Doação de Medicamentos',
+                    text: 'Confira esta doação de medicamentos no MeuMedShare',
+                    url: window.location.origin + '/Doacoes/Details/' + id
+                });
+            } else {
+                // Fallback para navegadores que não suportam Web Share API
+                const url = window.location.origin + '/Doacoes/Details/' + id;
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Link copiado para a área de transferência!');
+                });
+            }
+        }
+    </script>
+}

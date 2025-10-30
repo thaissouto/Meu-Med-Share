@@ -1,60 +1,88 @@
 @model MeuMedShare.ViewModels.LoginViewModel
 @{
-    ViewData["Title"] = "Login";
-    Layout = "_Layout"; // agora usando layout padr„o
+    ViewData["Title"] = "Login - MeuMedShare";
+    Layout = null; // Layout espec√≠fico para login
 }
-@section Styles {
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/login.css" />
-}
-<div class="container-fluid py-4 login-page">
-    <div class="row align-items-center">
-        <div class="col-lg-6 mb-4 mb-lg-0">
-            <div class="d-flex align-items-center mb-3">
-                <img src="~/img/logo-medshare.png" alt="MedShare" style="height:90px" class="me-3" />
-                <h1 class="display-4 fw-light text-primary m-0">MedShare</h1>
+</head>
+<body class="login-body">
+    <div class="login-wrapper">
+        <div class="login-left">
+            <div class="logo-area">
+                <img src="~/img/logotipo.png" alt="MeuMedShare" />
+                <h1 class="logo-text">MeuMedShare</h1>
             </div>
-            <p class="text-muted small ms-lg-5">O compartilhamento È indicado em casos de suspeita de sobras</p>
-            @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
-            <form asp-action="Login" method="post" class="mt-4" style="max-width:400px">
+            <p class="tagline">Conectando doadores e institui√ß√µes para um mundo mais saud√°vel</p>
+            
+            <div class="messages">
+                @Html.ValidationSummary(false, "", new { @class = "validation-summary-errors" })
+            </div>
+
+            <form asp-action="Login" method="post" class="login-form">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="ReturnUrl" />
-                <div class="mb-3">
-                    <label asp-for="Email" class="form-label"></label>
-                    <input asp-for="Email" class="form-control" placeholder="Email" autocomplete="username" />
-                    <span asp-validation-for="Email" class="text-danger small"></span>
+                
+                <div class="form-group">
+                    <input asp-for="Email" placeholder="E-mail" autocomplete="username" />
+                    <span asp-validation-for="Email" class="field-validation-error"></span>
                 </div>
-                <div class="mb-3">
-                    <label asp-for="Password" class="form-label"></label>
-                    <input asp-for="Password" type="password" class="form-control" placeholder="Senha" autocomplete="current-password" />
-                    <span asp-validation-for="Password" class="text-danger small"></span>
+                
+                <div class="form-group">
+                    <input asp-for="Password" type="password" placeholder="Senha" autocomplete="current-password" />
+                    <span asp-validation-for="Password" class="field-validation-error"></span>
                 </div>
-                <div class="d-flex gap-2 align-items-center mb-3">
-                    <button type="submit" class="btn btn-primary px-4">Entrar</button>
-                    <a asp-action="Register" class="btn btn-success px-4">Cadastre-se</a>
-                    <a href="#" class="btn btn-outline-secondary d-flex align-items-center" title="Login com Google (n„o implementado)">
-                        <img src="https://www.gstatic.com/images/branding/product/1x/gsa_48dp.png" alt="Google" style="height:20px" />
+                
+                <div class="actions">
+                    <button type="submit" class="btn btn-primario">Entrar</button>
+                    <a asp-action="Register" class="btn btn-secundario">Cadastrar-se</a>
+                    <a href="#" class="btn-google" title="Login com Google (em breve)">
+                        <img src="https://www.gstatic.com/images/branding/product/1x/gsa_48dp.png" alt="Google" />
                     </a>
                 </div>
-                <div>
-                    <a href="#" class="small text-decoration-none">Esqueci minha senha</a>
-                </div>
             </form>
+
+            <div class="forgot">
+                <a href="#">Esqueci minha senha</a>
+            </div>
         </div>
-        <div class="col-lg-6 text-center">
-            <img src="~/img/pills-placeholder.png" alt="Medicamentos" class="img-fluid" style="max-height:420px" />
-        </div>
-    </div>
-    <hr class="mt-5" />
-    <div class="row small text-muted pt-2">
-        <div class="col-md-8">
-            ?? Av. Dom JosÈ Gaspar, 500 CoraÁ„o EucarÌstico ñ Belo Horizonte ñ MG 30535-901, Brasil<br />
-            ? (31) 3319-4444 ∑ ? contato@medshare.com
-        </div>
-        <div class="col-md-4 text-md-end mt-3 mt-md-0">
-            <a asp-controller="Home" asp-action="Privacy" class="text-muted text-decoration-none">Sobre nÛs</a>
+        
+        <div class="login-right">
+            <img src="~/img/remedios.png" alt="Medicamentos" />
         </div>
     </div>
-</div>
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+    
+    <footer class="login-footer"></footer>
+    
+    <div class="footer-info">
+        <div>
+            üìç Av. Dom Jos√© Gaspar, 500 Cora√ß√£o Eucar√≠stico ‚Äì Belo Horizonte ‚Äì MG 30535-901, Brasil<br />
+            üìû (31) 3319-4444 ‚Ä¢ ‚úâ contato@meumedshare.com
+        </div>
+        <div class="sobre-nos">
+            <a asp-controller="Home" asp-action="Privacy">
+                Sobre n√≥s
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.unobtrusive.min.js"></script>
+    </environment>
+</body>
+</html>
