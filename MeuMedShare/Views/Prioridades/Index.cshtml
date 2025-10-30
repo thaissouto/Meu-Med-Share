@@ -1,0 +1,41 @@
+@model IEnumerable<MeuMedShare.Models.Domain.PrioridadeMedicamento>
+@using MeuMedShare.Models.Domain;
+@{
+    ViewData["Title"] = "Lista de Prioridades";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Lista de Prioridades</h2>
+    <a asp-action="Create" class="btn btn-primary">Nova Prioridade</a>
+</div>
+<table class="table table-hover align-middle">
+    <thead class="table-light">
+    <tr>
+        <th>Medicamento</th>
+        <th>Nível</th>
+        <th>Qtd Necessária</th>
+        <th>Ativo</th>
+        <th>Criado</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach(var p in Model){
+        var rowClass = p.Nivel == NivelEscassez.Critica ? "table-danger" : p.Nivel == NivelEscassez.Alta ? "table-warning" : string.Empty;
+        <tr class="@rowClass">
+            <td>@p.NomeMedicamento</td>
+            <td>
+                <span class="badge @(p.Nivel == NivelEscassez.Critica ? "bg-danger" : p.Nivel == NivelEscassez.Alta ? "bg-warning text-dark" : p.Nivel == NivelEscassez.Media ? "bg-info text-dark" : "bg-secondary")">@p.Nivel</span>
+            </td>
+            <td>@p.QuantidadeNecessaria</td>
+            <td>@(p.Ativo ? "Sim" : "Não")</td>
+            <td>@p.CriadoEm.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+            <td>
+                <form asp-action="Toggle" method="post" class="d-inline">
+                    <input type="hidden" name="id" value="@p.Id" />
+                    <button class="btn btn-sm btn-outline-secondary" type="submit">@(p.Ativo ? "Desativar" : "Ativar")</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

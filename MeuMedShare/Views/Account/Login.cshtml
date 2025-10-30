@@ -1,26 +1,60 @@
 @model MeuMedShare.ViewModels.LoginViewModel
 @{
     ViewData["Title"] = "Login";
+    Layout = "_Layout"; // agora usando layout padrão
 }
-<h2>Login</h2>
-<form asp-action="Login" method="post">
-    <input type="hidden" asp-for="ReturnUrl" />
-    <div>
-        <label asp-for="Email"></label>
-        <input asp-for="Email" />
-        <span asp-validation-for="Email"></span>
+@section Styles {
+    <link rel="stylesheet" href="~/css/login.css" />
+}
+<div class="container-fluid py-4 login-page">
+    <div class="row align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="d-flex align-items-center mb-3">
+                <img src="~/img/logo-medshare.png" alt="MedShare" style="height:90px" class="me-3" />
+                <h1 class="display-4 fw-light text-primary m-0">MedShare</h1>
+            </div>
+            <p class="text-muted small ms-lg-5">O compartilhamento é indicado em casos de suspeita de sobras</p>
+            @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
+            <form asp-action="Login" method="post" class="mt-4" style="max-width:400px">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ReturnUrl" />
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" placeholder="Email" autocomplete="username" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Senha" autocomplete="current-password" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+                <div class="d-flex gap-2 align-items-center mb-3">
+                    <button type="submit" class="btn btn-primary px-4">Entrar</button>
+                    <a asp-action="Register" class="btn btn-success px-4">Cadastre-se</a>
+                    <a href="#" class="btn btn-outline-secondary d-flex align-items-center" title="Login com Google (não implementado)">
+                        <img src="https://www.gstatic.com/images/branding/product/1x/gsa_48dp.png" alt="Google" style="height:20px" />
+                    </a>
+                </div>
+                <div>
+                    <a href="#" class="small text-decoration-none">Esqueci minha senha</a>
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-6 text-center">
+            <img src="~/img/pills-placeholder.png" alt="Medicamentos" class="img-fluid" style="max-height:420px" />
+        </div>
     </div>
-    <div>
-        <label asp-for="Password"></label>
-        <input asp-for="Password" />
-        <span asp-validation-for="Password"></span>
+    <hr class="mt-5" />
+    <div class="row small text-muted pt-2">
+        <div class="col-md-8">
+            ?? Av. Dom José Gaspar, 500 Coração Eucarístico – Belo Horizonte – MG 30535-901, Brasil<br />
+            ? (31) 3319-4444 · ? contato@medshare.com
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <a asp-controller="Home" asp-action="Privacy" class="text-muted text-decoration-none">Sobre nós</a>
+        </div>
     </div>
-    <div>
-        <input asp-for="RememberMe" /> <label asp-for="RememberMe">Lembrar-me</label>
-    </div>
-    <button type="submit">Entrar</button>
-</form>
-<a asp-action="Register">Criar conta</a>
+</div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

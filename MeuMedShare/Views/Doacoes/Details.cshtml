@@ -1,0 +1,44 @@
+@model MeuMedShare.Models.Domain.Doacao
+@{
+    ViewData["Title"] = "Detalhes da Doação";
+}
+<h2 class="mb-4">Detalhes da Doação</h2>
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Medicamento</h5>
+                <p class="mb-1"><strong>Nome:</strong> @Model.Medicamento?.Nome</p>
+                <p class="mb-1"><strong>Descrição:</strong> @Model.Medicamento?.Descricao</p>
+                <p class="mb-1"><strong>Validade:</strong> @Model.Medicamento?.DataValidade.ToString("dd/MM/yyyy")</p>
+                <p class="mb-1"><strong>Quantidade:</strong> @Model.Quantidade</p>
+                @if(!string.IsNullOrEmpty(Model.Medicamento?.FotoPath)){
+                    <div class="mt-2"><img src="/@Model.Medicamento.FotoPath" class="img-fluid rounded" style="max-width:220px" /></div>
+                }
+                @if(!string.IsNullOrEmpty(Model.Medicamento?.ReceitaPath)){
+                    <p class="mt-2"><a href="/@Model.Medicamento.ReceitaPath" target="_blank" class="btn btn-outline-secondary btn-sm">Ver Receita</a></p>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Destino</h5>
+                <p class="mb-1"><strong>Instituição:</strong><br /> @Model.Instituicao?.RazaoSocial</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Doador</h5>
+                <p class="mb-1">@Model.Doador?.Nome</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mt-4">
+    <a asp-action="Create" class="btn btn-primary">Nova Doação</a>
+    <a asp-action="Index" class="btn btn-outline-secondary ms-2">Voltar</a>
+</div>

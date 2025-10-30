@@ -1,0 +1,43 @@
+@model MeuMedShare.ViewModels.Perfis.PerfilCreateViewModel
+@{
+    ViewData["Title"] = "Cadastro de Perfil";
+}
+<h2 class="mb-4">Cadastro de Perfil (@Model.Tipo)</h2>
+<form asp-action="Create" method="post" class="row g-3">
+    <input type="hidden" asp-for="Tipo" />
+    <div class="col-md-6">
+        <label asp-for="NomeOuRazao" class="form-label"></label>
+        <input asp-for="NomeOuRazao" class="form-control" />
+        <span asp-validation-for="NomeOuRazao" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="CpfOuCnpj" class="form-label"></label>
+        <input asp-for="CpfOuCnpj" class="form-control" />
+        <span asp-validation-for="CpfOuCnpj" class="text-danger small"></span>
+    </div>
+    <div class="col-12"><h5 class="mt-3">Endereço</h5><hr /></div>
+    <div class="col-md-6">
+        <label asp-for="Logradouro" class="form-label"></label>
+        <input asp-for="Logradouro" class="form-control" />
+        <span asp-validation-for="Logradouro" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Cidade" class="form-label"></label>
+        <input asp-for="Cidade" class="form-control" />
+        <span asp-validation-for="Cidade" class="text-danger small"></span>
+    </div>
+    <div class="col-md-2">
+        <label asp-for="UF" class="form-label"></label>
+        <input asp-for="UF" class="form-control" />
+        <span asp-validation-for="UF" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="CEP" class="form-label"></label>
+        <input asp-for="CEP" class="form-control" />
+        <span asp-validation-for="CEP" class="text-danger small"></span>
+    </div>
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+</form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

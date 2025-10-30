@@ -1,0 +1,55 @@
+@model MeuMedShare.ViewModels.Doacao.DoacaoCreateViewModel
+@{
+    ViewData["Title"] = "Nova Doação";
+}
+<h2 class="mb-4">Nova Doação</h2>
+<form asp-action="Create" method="post" enctype="multipart/form-data" class="row g-3">
+    <div class="col-12">
+        <h5>Medicamento</h5>
+        <hr />
+    </div>
+    <div class="col-md-6">
+        <label asp-for="NomeMedicamento" class="form-label"></label>
+        <input asp-for="NomeMedicamento" class="form-control" />
+        <span asp-validation-for="NomeMedicamento" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="DataValidade" class="form-label"></label>
+        <input asp-for="DataValidade" type="date" class="form-control" />
+        <span asp-validation-for="DataValidade" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Quantidade" class="form-label"></label>
+        <input asp-for="Quantidade" class="form-control" />
+        <span asp-validation-for="Quantidade" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Descricao" class="form-label"></label>
+        <textarea asp-for="Descricao" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Descricao" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Foto do Medicamento</label>
+        <input asp-for="Foto" type="file" accept="image/*" class="form-control" />
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Receita (quando necessária)</label>
+        <input asp-for="Receita" type="file" accept="application/pdf,image/*" class="form-control" />
+    </div>
+    <div class="col-12 mt-4">
+        <h5>Destino</h5>
+        <hr />
+    </div>
+    <div class="col-md-6">
+        <label asp-for="InstituicaoId" class="form-label">Instituição</label>
+        <select asp-for="InstituicaoId" class="form-select" asp-items="@(new SelectList(Model.InstituicoesDisponiveis, "Id", "RazaoSocial"))"></select>
+        <span asp-validation-for="InstituicaoId" class="text-danger small"></span>
+    </div>
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a asp-action="Index" class="btn btn-outline-secondary ms-2">Cancelar</a>
+    </div>
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

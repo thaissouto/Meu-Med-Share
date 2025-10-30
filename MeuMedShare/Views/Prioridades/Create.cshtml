@@ -1,0 +1,35 @@
+@model MeuMedShare.ViewModels.Prioridades.PrioridadeCreateViewModel
+@using MeuMedShare.Models.Domain;
+@{
+    ViewData["Title"] = "Nova Prioridade";
+}
+<h2 class="mb-4">Nova Prioridade</h2>
+<form asp-action="Create" method="post" class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="NomeMedicamento" class="form-label"></label>
+        <input asp-for="NomeMedicamento" class="form-control" />
+        <span asp-validation-for="NomeMedicamento" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Nivel" class="form-label"></label>
+        <select asp-for="Nivel" class="form-select" asp-items="Html.GetEnumSelectList<NivelEscassez>()"></select>
+        <span asp-validation-for="Nivel" class="text-danger small"></span>
+    </div>
+    <div class="col-md-8">
+        <label asp-for="Observacao" class="form-label"></label>
+        <textarea asp-for="Observacao" rows="3" class="form-control"></textarea>
+        <span asp-validation-for="Observacao" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="QuantidadeNecessaria" class="form-label"></label>
+        <input asp-for="QuantidadeNecessaria" class="form-control" />
+        <span asp-validation-for="QuantidadeNecessaria" class="text-danger small"></span>
+    </div>
+    <div class="col-12 mt-2">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a asp-action="Index" class="btn btn-outline-secondary ms-2">Cancelar</a>
+    </div>
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,31 @@
+@model IEnumerable<MeuMedShare.Models.Domain.Doacao>
+@{
+    ViewData["Title"] = "Minhas Doações";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Minhas Doações</h2>
+    <a asp-action="Create" class="btn btn-primary">Nova Doação</a>
+</div>
+<table class="table table-hover align-middle">
+    <thead class="table-light">
+    <tr>
+        <th>Data</th>
+        <th>Medicamento</th>
+        <th>Qtd</th>
+        <th>Instituição</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var d in Model)
+    {
+        <tr>
+            <td>@d.DataDoacao.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+            <td>@d.Medicamento?.Nome</td>
+            <td><span class="badge bg-secondary">@d.Quantidade</span></td>
+            <td>@d.Instituicao?.RazaoSocial</td>
+            <td><a asp-action="Details" asp-route-id="@d.Id" class="btn btn-sm btn-outline-primary">Detalhes</a></td>
+        </tr>
+    }
+    </tbody>
+</table>

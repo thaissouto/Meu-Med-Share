@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using MeuMedShare.Models;
+using MeuMedShare.Models.Domain;
 
 namespace MeuMedShare.Data;
 
@@ -15,6 +15,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Endereco> Enderecos => Set<Endereco>();
     public DbSet<Medicamento> Medicamentos => Set<Medicamento>();
     public DbSet<Doacao> Doacoes => Set<Doacao>();
+    public DbSet<PrioridadeMedicamento> PrioridadesMedicamentos => Set<PrioridadeMedicamento>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -46,5 +47,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(d => d.Medicamento)
             .WithMany(m => m.Doacoes)
             .HasForeignKey(d => d.MedicamentoId);
+
+        builder.Entity<PrioridadeMedicamento>()
+            .HasOne(p => p.Instituicao)
+            .WithMany(i => i.Prioridades)
+            .HasForeignKey(p => p.InstituicaoId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

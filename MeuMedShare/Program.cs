@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MeuMedShare.Data;
-using MeuMedShare.Models;
+using MeuMedShare.Models.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
 
